@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bnpl-config-service
+  labels:
+    app: bnpl-config-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bnpl-config-service
+  template:
+    metadata:
+      labels:
+        app: bnpl-config-service
+    spec:
+      containers:
+        - name: bnpl-config-service
+          image: bnpl-config-service
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "sh", "-c", "sleep 5" ]
+          ports:
+            - containerPort: 8888
+          env:
+            - name: BPL_JVM_THREAD_COUNT
+              value: "50"
